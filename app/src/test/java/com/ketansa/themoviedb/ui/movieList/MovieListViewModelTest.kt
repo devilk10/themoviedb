@@ -4,6 +4,7 @@ import com.ketansa.themoviedb.api.Response
 import com.ketansa.themoviedb.domain.Movie
 import com.ketansa.themoviedb.repository.MovieRepository
 import com.ketansa.themoviedb.util.AppDispatchers
+import com.ketansa.themoviedb.util.Constants.ErrorCodes.INVALID_RESPONSE
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -35,7 +36,7 @@ class MovieListViewModelTest {
 
     @Test
     fun shouldSetErrorWhenErrorResponseIsReturnedFromRepository() = runBlocking {
-        coEvery { mockRepository.getAllMovies() } returns Response.Error("")
+        coEvery { mockRepository.getAllMovies() } returns Response.Error(INVALID_RESPONSE, "")
         movieListViewModel = MovieListViewModel(mockRepository, testDispatcher)
 
         Assert.assertEquals(emptyList<Movie>(), movieListViewModel.movies.value)

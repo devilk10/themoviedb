@@ -5,6 +5,8 @@ import com.ketansa.themoviedb.api.MovieApiService
 import com.ketansa.themoviedb.api.MovieResponse
 import com.ketansa.themoviedb.api.Response
 import com.ketansa.themoviedb.domain.Movie
+import com.ketansa.themoviedb.util.Constants.ErrorCodes.INVALID_RESPONSE
+import com.ketansa.themoviedb.util.Constants.ErrorCodes.NO_INTERNET
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -12,6 +14,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import java.net.SocketException
 import java.util.*
 
 @RunWith(JUnit4::class)
@@ -38,7 +41,17 @@ class MovieRepositoryTest {
         coEvery { mockApiService.getAllMovies() } throws Exception("")
 
         Assert.assertEquals(
-            Response.Error("Hi, unable to parse response "),
+            Response.Error(INVALID_RESPONSE, "Invalid Response "),
+            MovieRepository(mockApiService).getAllMovies()
+        )
+    }
+
+    @Test
+    fun shouldReturnErrorWhenApiThrowsSocketException() = runBlocking {
+        coEvery { mockApiService.getAllMovies() } throws SocketException("no internet")
+
+        Assert.assertEquals(
+            Response.Error(NO_INTERNET, "Socket exception no internet"),
             MovieRepository(mockApiService).getAllMovies()
         )
     }
