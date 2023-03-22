@@ -15,7 +15,10 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.util.*
 
-@Config(sdk = [30])
+@Config(
+    manifest = Config.NONE,
+    sdk = [30]
+)
 @RunWith(RobolectricTestRunner::class)
 class MovieListScreenKtTest {
 
