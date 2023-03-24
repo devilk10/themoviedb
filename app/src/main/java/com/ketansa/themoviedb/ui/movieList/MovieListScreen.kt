@@ -1,5 +1,6 @@
 package com.ketansa.themoviedb.ui.movieList
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +22,9 @@ import com.ketansa.themoviedb.util.Constants
 import com.ketansa.themoviedb.util.TestTag
 import com.ketansa.themoviedb.util.toNormalDate
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MovieListScreen(mealViewModel: MovieListViewModel) {
+fun MovieListScreen(movieListViewModel: MovieListViewModel) {
     Scaffold(topBar = {
         TopAppBar(
             title = { Text(text = "TheMovieDB") },
@@ -34,12 +36,12 @@ fun MovieListScreen(mealViewModel: MovieListViewModel) {
             }
         )
     }) {
-        LazyColumn(content = MealItem(mealViewModel.movies.value))
+        LazyColumn(content = MovieItem(movieListViewModel.movies.value))
     }
 }
 
 @Composable
-private fun MealItem(movies: List<Movie>): LazyListScope.() -> Unit =
+private fun MovieItem(movies: List<Movie>): LazyListScope.() -> Unit =
     {
         items(movies) { item ->
             Card(
