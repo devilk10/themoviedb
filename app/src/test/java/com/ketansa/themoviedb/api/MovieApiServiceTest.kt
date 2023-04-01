@@ -33,7 +33,7 @@ class MovieApiServiceTest {
         coEvery { mockApi.getAllMovies() } returns discoverMovieResponse
 
         assertEquals(
-            movieApiService.getAllMovies(),
+            movieApiService.getAllMovies(page),
             discoverMovieResponse
         )
     }

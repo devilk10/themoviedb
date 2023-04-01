@@ -9,12 +9,15 @@ class MovieApiService(retrofit: Retrofit) {
 
     private val api: MovieApi = retrofit.create(MovieApi::class.java)
 
-    suspend fun getAllMovies(): DiscoverMovieResponse {
-        return api.getAllMovies()
+    suspend fun getAllMovies(page: Int): DiscoverMovieResponse {
+        return api.getAllMovies(page = page)
     }
 }
 
 interface MovieApi {
     @GET("discover/movie")
-    suspend fun getAllMovies(@Query("api_key") apiKey: String = BuildConfig.ApiKey): DiscoverMovieResponse
+    suspend fun getAllMovies(
+        @Query("page") page: Int,
+        @Query("api_key") apiKey: String = BuildConfig.ApiKey
+    ): DiscoverMovieResponse
 }

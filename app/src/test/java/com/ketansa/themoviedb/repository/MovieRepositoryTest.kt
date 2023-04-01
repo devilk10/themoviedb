@@ -25,7 +25,7 @@ class MovieRepositoryTest {
     @Test
     fun getAllMovies() = runBlocking {
         val movieResponse = MovieResponse("Hello", Date(), "url")
-        coEvery { mockApiService.getAllMovies() } returns DiscoverMovieResponse(
+        coEvery { mockApiService.getAllMovies(page) } returns DiscoverMovieResponse(
             0, listOf(
                 movieResponse
             )
