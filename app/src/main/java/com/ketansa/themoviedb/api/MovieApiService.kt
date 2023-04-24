@@ -1,9 +1,11 @@
 package com.ketansa.themoviedb.api
 
 import com.ketansa.themoviedb.BuildConfig
+import kotlinx.coroutines.delay
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.io.IOException
 
 class MovieApiService(retrofit: Retrofit) {
 

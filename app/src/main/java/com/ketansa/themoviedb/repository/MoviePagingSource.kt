@@ -18,20 +18,12 @@ class MoviePagingSource(private val movieApiService: MovieApiService) : PagingSo
         return try {
             val page = params.key ?: 1
             val response = movieApiService.getAllMovies(page = page)
-            Log.d(
-                "imptan",
-                "loadAllMovies: movies ${response.results.size}}"
-            )
             LoadResult.Page(
                 data = response.results,
                 prevKey = if (page == 1) null else page.minus(1),
                 nextKey = if (response.results.isEmpty()) null else page.plus(1),
             )
         } catch (e: Exception) {
-            Log.e(
-                "imptan",
-                "loadAllMovies: exception ${e.localizedMessage}}"
-            )
             LoadResult.Error(e)
         }
     }

@@ -1,5 +1,6 @@
 package com.ketansa.themoviedb.api
 
+import com.ketansa.themoviedb.domain.Movie
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -29,11 +30,21 @@ class MovieApiServiceTest {
     @Test
     fun getAllMoviesShouldReturnMovieResponse() = runBlocking {
         val discoverMovieResponse =
-            DiscoverMovieResponse(0, listOf(MovieResponse("ping pong", Date(1234324L), "")))
-        coEvery { mockApi.getAllMovies() } returns discoverMovieResponse
+            DiscoverMovieResponse(
+                0, listOf(
+                    Movie(
+                        id = 8614,
+                        title = "vocent",
+                        overview = "himenaeos",
+                        posterPath = "litora",
+                        releaseDate = Date()
+                    )
+                )
+            )
+        coEvery { mockApi.getAllMovies(0) } returns discoverMovieResponse
 
         assertEquals(
-            movieApiService.getAllMovies(page),
+            movieApiService.getAllMovies(0),
             discoverMovieResponse
         )
     }

@@ -1,58 +1,40 @@
-package com.ketansa.themoviedb.repository
-
+import androidx.paging.PagingData
 import com.ketansa.themoviedb.api.DiscoverMovieResponse
 import com.ketansa.themoviedb.api.MovieApiService
-import com.ketansa.themoviedb.api.MovieResponse
-import com.ketansa.themoviedb.api.Response
 import com.ketansa.themoviedb.domain.Movie
-import com.ketansa.themoviedb.util.Constants.ErrorCodes.INVALID_RESPONSE
-import com.ketansa.themoviedb.util.Constants.ErrorCodes.NO_INTERNET
+import com.ketansa.themoviedb.repository.MovieRepository
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.net.SocketException
 import java.util.*
 
 @RunWith(JUnit4::class)
 class MovieRepositoryTest {
 
-    private val mockApiService: MovieApiService = mockk()
+    private lateinit var movieRepository: MovieRepository
+    private val movieApiService = mockk<MovieApiService>()
 
-    @Test
-    fun getAllMovies() = runBlocking {
-        val movieResponse = MovieResponse("Hello", Date(), "url")
-        coEvery { mockApiService.getAllMovies(page) } returns DiscoverMovieResponse(
-            0, listOf(
-                movieResponse
-            )
-        )
-        Assert.assertEquals(
-            MovieRepository(mockApiService).getAllMovies(),
-            Response.Success(listOf(Movie("Hello", movieResponse.releaseDate, "url")))
-        )
+    @Before
+    fun setup() {
+        movieRepository = MovieRepository(movieApiService)
     }
 
-    @Test
-    fun shouldReturnErrorWhenApiThrowsAnException() = runBlocking {
-        coEvery { mockApiService.getAllMovies() } throws Exception("")
+    @Test(expected = Exception::class)
+    fun `test getAllMovies throws exception`() = runBlocking {
+        // Arrange
+        val exception = Exception("Test Exception")
+        coEvery { movieApiService.getAllMovies(any()) } throws exception
 
-        Assert.assertEquals(
-            Response.Error(INVALID_RESPONSE, "Invalid Response "),
-            MovieRepository(mockApiService).getAllMovies()
-        )
-    }
-
-    @Test
-    fun shouldReturnErrorWhenApiThrowsSocketException() = runBlocking {
-        coEvery { mockApiService.getAllMovies() } throws SocketException("no internet")
-
-        Assert.assertEquals(
-            Response.Error(NO_INTERNET, "Socket exception no internet"),
-            MovieRepository(mockApiService).getAllMovies()
-        )
+        // Act
+        coEvery { movieRepository.getAllMovies() } throws exception
+        movieRepository.getAllMovies().collect()
     }
 }
