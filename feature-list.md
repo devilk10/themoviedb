@@ -4,10 +4,12 @@ The following is a list of features for the project and their statuses:
 
 - [x] List movies from API
 - [x] Show movies in paginated fashion using Paging3
+- [-] Show movie details in a new page, use jetpack navigation 
 - [ ] Add a movie to watch list and save it to local db
 - [ ] Create a separate module to show wish listed movies
 - [ ] Add a search movie option on toolbar
-- [ ] Show movie details in a popup 
+- [ ] Replace manual di with hilt when it gets complex to manage
+- [-] Fix robolectric tests not running
 -  
 
 ## List movies from API

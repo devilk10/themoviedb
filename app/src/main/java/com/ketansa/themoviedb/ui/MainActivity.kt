@@ -3,14 +3,16 @@ package com.ketansa.themoviedb.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.ketansa.themoviedb.AppContainer
 import com.ketansa.themoviedb.TMDBApp
+import com.ketansa.themoviedb.ui.movieDetails.MovieDetailsScreen
 import com.ketansa.themoviedb.ui.movieList.MovieListScreen
 import com.ketansa.themoviedb.ui.theme.TheMovieDBTheme
 
@@ -22,11 +24,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             TheMovieDBTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "moviesList"
                 ) {
-                    MovieListScreen(appContainer.movieViewModel)
+                    composable("moviesList") {
+                        MovieListScreen(
+                            appContainer.movieViewModel
+                        ) { movieId ->
+                            navController.navigate("movieDetails/$movieId")
+                        }
+                    }
+                    composable(
+                        "movieDetails/{movieId}",
+                        arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val movieId = backStackEntry.arguments?.getInt("movieId")
+                        movieId?.let { MovieDetailsScreen(appContainer.movieDetailsViewModel, it) }
+                    }
                 }
             }
         }
@@ -38,6 +55,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     TheMovieDBTheme {
-        MovieListScreen(AppContainer().movieViewModel)
+        MovieListScreen(AppContainer().movieViewModel) {}
     }
 }

@@ -2,6 +2,7 @@ package com.ketansa.themoviedb.ui.movieList
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,7 +29,7 @@ import com.ketansa.themoviedb.util.toNormalDate
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MovieListScreen(movieListViewModel: MovieListViewModel) {
+fun MovieListScreen(movieListViewModel: MovieListViewModel, onMovieClick: (movieId: Int) -> Unit) {
     Scaffold(topBar = {
         TopAppBar(
             title = { Text(text = "TheMovieDB") },
@@ -44,7 +45,7 @@ fun MovieListScreen(movieListViewModel: MovieListViewModel) {
         LazyColumn {
             items(movies) { movie ->
                 movie?.let {
-                    MovieCard(it)
+                    MovieCard(it, onMovieClick)
                 }
             }
             when (movies.loadState.append) {
@@ -112,11 +113,12 @@ private fun ErrorItem() {
 }
 
 @Composable
-fun MovieCard(item: Movie) {
+fun MovieCard(item: Movie, onMovieClick: (movieId: Int) -> Unit) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = 4.dp,
         modifier = Modifier
+            .clickable { onMovieClick.invoke(item.id) }
             .fillMaxWidth()
             .padding(top = 2.dp)
             .testTag(TestTag.CARD)
@@ -138,7 +140,8 @@ fun MovieCard(item: Movie) {
                     .padding(16.dp)
             ) {
                 Text(text = item.title, style = Typography.h6)
-                Text(text = item.releaseDate.toNormalDate() ?: "01/01/1970")
+                // todo weird NullPointerException at releaseDate being null
+                Text(text = item.releaseDate?.toNormalDate() ?: "01/01/1970")
             }
         }
     }

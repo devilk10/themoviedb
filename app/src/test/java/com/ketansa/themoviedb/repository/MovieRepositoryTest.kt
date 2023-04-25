@@ -1,13 +1,9 @@
-import androidx.paging.PagingData
-import com.ketansa.themoviedb.api.DiscoverMovieResponse
 import com.ketansa.themoviedb.api.MovieApiService
 import com.ketansa.themoviedb.domain.Movie
 import com.ketansa.themoviedb.repository.MovieRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -36,5 +32,18 @@ class MovieRepositoryTest {
         // Act
         coEvery { movieRepository.getAllMovies() } throws exception
         movieRepository.getAllMovies().collect()
+    }
+
+    @Test
+    fun shouldFetchMovieDetailsOf() = runBlocking {
+        val movie = Movie(
+            id = 7562,
+            title = "ridiculus",
+            overview = "facilisis",
+            posterPath = "nihil",
+            releaseDate = Date()
+        )
+        coEvery { movieApiService.getDetailsOf(1234) } returns movie
+        assertEquals(movieRepository.getDetailsOf(1234), movie)
     }
 }

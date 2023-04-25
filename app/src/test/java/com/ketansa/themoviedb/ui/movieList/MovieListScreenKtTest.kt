@@ -39,7 +39,7 @@ class MovieListScreenKtTest {
         every { mockViewModel.loadAllMovies() } returns flow { pagingData }
 
         composeTestRule.setContent {
-            MovieListScreen(mockViewModel)
+            MovieListScreen(mockViewModel) {}
         }
         composeTestRule.onNodeWithTag(TestTag.CARD).assertExists()
         composeTestRule.onNodeWithText("Wakanda Forever").assertExists()
